@@ -44,12 +44,11 @@ const init = async () => {
             dai,
             weth
         );
-        console.log('daiWeth:', daiWeth);
-
 
         web3.eth.subscribe('newBlockHeaders')
             .on('data', async block => {
                 console.log(`New block received. Block # ${block.number}`);
+
                 const kyberResults = await Promise.all([
                     kyber
                         .methods
@@ -68,6 +67,7 @@ const init = async () => {
                         )
                         .call(),
                 ]);
+
                 const kyberRates = {
                     buy: parseFloat(1 / (kyberResults[0].expectedRate / (10 ** 18))),
                     sell: parseFloat(kyberResults[1].expectedRate / (10 ** 18))
@@ -79,7 +79,14 @@ const init = async () => {
                     daiWeth.getOutputAmount(new TokenAmount(dai, AMOUNT_DAI_WEI)),
                     daiWeth.getOutputAmount(new TokenAmount(weth, AMOUNT_ETH_WEI)),
                 ]);
-                console.log(uniswapResults);
+
+                const uniswapRates = {
+                    buy: parseFloat(AMOUNT_DAI_WEI / (uniswapResults[0][0].toExact() * 10 ** 18)),
+                    sell: parseFloat(uniswapResults[1][0].toExact() / AMOUNT_ETH)
+                };
+
+                console.log('Uniswap ETH/DAI');
+                console.log(uniswapRates)
             })
             .on('error', err => {
                 console.log(err);
