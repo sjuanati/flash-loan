@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@openzeppelin/test-helpers": "^0.5.10",
+    "@studydefi/money-legos": "^2.4.1",
     "@types/jest": "^26.0.19",
     "@uniswap/sdk": "^3.0.2",
     "dotenv": "^8.2.0",
